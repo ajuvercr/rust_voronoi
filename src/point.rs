@@ -8,24 +8,24 @@ use std::cmp::Ordering;
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct Point {
     /// x coordinate
-    pub x: OrderedFloat<f64>,
+    pub x: OrderedFloat<f32>,
     /// y coordinate
-    pub y: OrderedFloat<f64>
+    pub y: OrderedFloat<f32>
 }
 
 impl Point {
     /// Constructs a new `Point`.
-    pub fn new(x: f64, y: f64) -> Self {
-        Point {x: OrderedFloat::<f64>(x), y: OrderedFloat::<f64>(y)}
+    pub fn new(x: f32, y: f32) -> Self {
+        Point {x: OrderedFloat::<f32>(x), y: OrderedFloat::<f32>(y)}
     }
 
     /// Getter for the x coordinate.
-    pub fn x(&self) -> f64 {
+    pub fn x(&self) -> f32 {
         self.x.into_inner()
     }
 
     /// Getter for the y coordinate.
-    pub fn y(&self) -> f64 {
+    pub fn y(&self) -> f32 {
         self.y.into_inner()
     }
 }
@@ -39,14 +39,14 @@ impl fmt::Debug for Point {
 #[allow(unused_variables)]
 impl Rand for Point {
     fn rand<R: Rng>(rng: &mut R) -> Point {
-        Point::new(random::<f64>(), random::<f64>())
+        Point::new(random::<f32>(), random::<f32>())
     }
 }
 
-impl Mul<f64> for Point {
+impl Mul<f32> for Point {
     type Output = Point;
 
-    fn mul(self, _rhs: f64) -> Point {
+    fn mul(self, _rhs: f32) -> Point {
         Point::new(self.x.into_inner() * _rhs, self.y.into_inner() * _rhs)
     }
 }
@@ -69,12 +69,12 @@ impl Add<Point> for Point {
 
 impl Point {
     /// Computes the cross product of two points, viewed as vectors from the origin.
-    pub fn cross(self, rhs: Point) -> f64 {
+    pub fn cross(self, rhs: Point) -> f32 {
         self.x() * rhs.y() - self.y() * rhs.x()
     }
 
     /// Computes the dot product of two points, viewed as vectors from the origin.
-    pub fn dot(self, rhs: Point) -> f64 {
+    pub fn dot(self, rhs: Point) -> f32 {
         self.x() * rhs.x() + self.y() * rhs.y()
     }
 }

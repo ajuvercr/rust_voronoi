@@ -9,7 +9,7 @@ use point::Point;
 #[derive(Clone)]
 pub enum Event {
     Site(Point),
-    Circle(Point /* center */, f64 /* radius */, usize /* index of disappearing arc */, usize /* id */),
+    Circle(Point /* center */, f32 /* radius */, usize /* index of disappearing arc */, usize /* id */),
 }
 
 impl fmt::Debug for Event {
@@ -44,7 +44,7 @@ impl Ord for Event {
 }
 
 impl Event {
-    pub fn get_y(&self) -> f64 {
+    pub fn get_y(&self) -> f32 {
         match *self {
             Event::Site(ref pt) => pt.y(),
             Event::Circle(center, radius, _, _) => center.y() + radius,

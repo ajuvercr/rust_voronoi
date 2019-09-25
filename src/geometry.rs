@@ -26,7 +26,7 @@ pub fn segment_intersection(seg1: Segment, seg2: Segment) -> Option<Point> {
     return Some(a + r * t);
 }
 
-pub fn circle_bottom(triple_site: TripleSite) -> Option<OrderedFloat<f64>> {
+pub fn circle_bottom(triple_site: TripleSite) -> Option<OrderedFloat<f32>> {
     let circle_center = circle_center(triple_site);
     if let None = circle_center { return None; }
     let circle_center = circle_center.unwrap();
@@ -39,7 +39,7 @@ pub fn circle_bottom(triple_site: TripleSite) -> Option<OrderedFloat<f64>> {
 
     let r = ((x3 - x_cen) * (x3 - x_cen) + (y3 - y_cen) * (y3 - y_cen)).sqrt();
 
-    return Some(OrderedFloat::<f64>(y_cen - r));
+    return Some(OrderedFloat::<f32>(y_cen - r));
 }
 
 pub fn circle_center(triple_site: TripleSite) -> Option<Point> {
@@ -87,7 +87,7 @@ pub fn breakpoints_converge(triple_site: TripleSite) -> bool {
     (ay - by) * (bx - cx) > (by - cy) * (ax - bx)
 }
 
-pub fn get_breakpoint_x(bp: &BreakPoint, yl: f64) -> f64 {
+pub fn get_breakpoint_x(bp: &BreakPoint, yl: f32) -> f32 {
     let ax = bp.left_site.x();
     let bx = bp.right_site.x();
     let ay = bp.left_site.y();
@@ -113,7 +113,7 @@ pub fn get_breakpoint_x(bp: &BreakPoint, yl: f64) -> f64 {
 }
 
 // TODO: handle py == yl case
-pub fn get_breakpoint_y(bp: &BreakPoint, yl: f64) -> f64 {
+pub fn get_breakpoint_y(bp: &BreakPoint, yl: f32) -> f32 {
     let px = bp.left_site.x();
     let py = bp.left_site.y();
 

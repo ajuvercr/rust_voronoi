@@ -8,7 +8,7 @@ type TripleSite = (Point, Point, Point);
 
 /// Computes the Voronoi diagram of a set of points.
 /// Returns a Doubly Connected Edge List.
-pub fn voronoi(points: Vec<Point>, boxsize: f64) -> DCEL {
+pub fn voronoi(points: Vec<Point>, boxsize: f32) -> DCEL {
     trace!("Starting Voronoi Computation");
     let mut event_queue = EventQueue::new();
     let mut beachline = BeachLine::new();
@@ -259,12 +259,12 @@ fn handle_circle_event(
     }
 }
 
-fn outside_bb(pt: Point, box_size: f64) -> bool {
+fn outside_bb(pt: Point, box_size: f32) -> bool {
     let delta = 0.1;
     pt.x() < 0. - delta || pt.x() > box_size + delta || pt.y() < 0. - delta || pt.y() > box_size + delta
 }
 
-fn add_bounding_box(boxsize: f64, beachline: &BeachLine, dcel: &mut DCEL) {
+fn add_bounding_box(boxsize: f32, beachline: &BeachLine, dcel: &mut DCEL) {
     extend_edges(beachline, dcel);
 
     let delta = 50.;
@@ -317,37 +317,4 @@ fn extend_edges(beachline: &BeachLine, dcel: &mut DCEL) {
         } else { break; }
     }
 
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use dcel::make_polygons;
-
-    #[test]
-    fn readme_example() {
-        let vor_pts = vec![Point::new(0.0, 1.0), Point::new(2.0, 3.0), Point::new(10.0, 12.0)];
-        let vor_diagram = voronoi(vor_pts, 800.);
-        let vor_polys = make_polygons(&vor_diagram);
-        assert_eq!(vor_polys.len(), 3);
-    }
-
-    #[test]
-    #[ignore]
-    fn degenerate_example_horz() {
-        let vor_pts = vec![Point::new(10.0, 1.0), Point::new(20.0, 1.0), Point::new(30.0, 1.0)];
-        let num_pts = vor_pts.len();
-        let vor_diagram = voronoi(vor_pts, 800.);
-        let vor_polys = make_polygons(&vor_diagram);
-        assert_eq!(vor_polys.len(), num_pts);
-    }
-
-    #[test]
-    fn degenerate_example_vert() {
-        let vor_pts = vec![Point::new(1.0, 10.0), Point::new(1.0, 20.0), Point::new(1.0, 30.0), Point::new(1.0, 40.0)];
-        let num_pts = vor_pts.len();
-        let vor_diagram = voronoi(vor_pts, 800.);
-        let vor_polys = make_polygons(&vor_diagram);
-        assert_eq!(vor_polys.len(), num_pts);
-    }
 }
