@@ -306,11 +306,11 @@ fn handle_circle_event(
 fn add_bounding_box(bb: BBox, beachline: &BeachLine, dcel: &mut DCEL) {
     extend_edges(beachline, dcel);
 
-    let delta = 0.;
+    let delta = 50.;
     let bb_top =    [Point::new(bb.left() - delta, bb.top()),         Point::new(bb.right() + delta, bb.top())];
     let bb_bottom = [Point::new(bb.left() - delta, bb.bottom()),      Point::new(bb.right() + delta, bb.bottom())];
-    let bb_left =   [Point::new(bb.left(),         bb.top() - delta), Point::new(bb.left(),          bb.bottom() + delta)];
-    let bb_right =  [Point::new(bb.right(),        bb.top() - delta), Point::new(bb.right(),         bb.bottom() + delta)];
+    let bb_left =   [Point::new(bb.left(),         bb.top() + delta), Point::new(bb.left(),          bb.bottom() - delta)];
+    let bb_right =  [Point::new(bb.right(),        bb.top() + delta), Point::new(bb.right(),         bb.bottom() - delta)];
 
     add_line(bb_top, dcel);
     add_line(bb_right, dcel);
