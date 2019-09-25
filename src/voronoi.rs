@@ -27,7 +27,8 @@ impl From<&Vec<f32>> for BBox {
 impl BBox {
     fn inside(&self, p: Point) -> bool {
         let b = self.inner;
-        p.x() > b[0] && p.y() > b[1] && p.x() < b[0] + b[2] && p.y() < b[1] + b[2]
+        let delta = 0.2;
+        p.x() > b[0] - delta && p.y() > b[1] - delta && p.x() < b[0] + b[2] + delta && p.y() < b[1] + b[2] + delta
     }
 
     fn left(&self) -> f32 {
@@ -318,12 +319,12 @@ fn add_bounding_box(bb: BBox, beachline: &BeachLine, dcel: &mut DCEL) {
 
     dcel.set_prev();
 
-    // for vert in 0..dcel.vertices.len() {
-    //     let this_pt = dcel.vertices[vert].coordinates;
-    //     if !bb.inside(this_pt) {
-    //         dcel.remove_vertex(vert);
-    //     }
-    // }
+    for vert in 0..dcel.vertices.len() {
+        let this_pt = dcel.vertices[vert].coordinates;
+        if !bb.inside(this_pt) {
+            dcel.remove_vertex(vert);
+        }
+    }
 }
 
 // This just extends the edges past the end of the bounding box
