@@ -26,6 +26,7 @@ impl From<&Vec<f32>> for BBox {
 
 impl BBox {
     fn inside(&self, p: Point) -> bool {
+        return true;
         let b = self.inner;
         let delta = 0.2;
         p.x() > b[0] - delta && p.y() > b[1] - delta && p.x() < b[0] + b[2] + delta && p.y() < b[1] + b[2] + delta
