@@ -76,7 +76,7 @@ pub fn voronoi(points: Vec<Point>, boxsize: (f32, f32, f32, f32)) -> DCEL {
             }
         }
     }
-    add_bounding_box(boxsize.into(), &beachline, &mut result);
+    // add_bounding_box(boxsize.into(), &beachline, &mut result);
     add_faces(&mut result);
     return result;
 }
