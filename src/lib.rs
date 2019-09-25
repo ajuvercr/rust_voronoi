@@ -25,3 +25,6 @@ pub use voronoi::voronoi;
 pub use point::Point;
 pub use dcel::{DCEL, make_line_segments, make_polygons};
 pub use lloyd::{lloyd_relaxation, polygon_centroid};
+
+/// Type for the bounding box
+pub type BBox = (f32, f32, f32, f32);

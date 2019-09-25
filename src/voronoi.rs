@@ -4,11 +4,54 @@ use beachline::*;
 use event::*;
 use geometry::*;
 
+struct BBox {
+    inner: [f32; 4],
+}
+
+impl From<(f32, f32, f32, f32)> for BBox {
+    fn from(f: (f32, f32, f32, f32)) -> Self {
+        BBox {
+            inner: [f.0, f.1, f.2, f.3]
+        }
+    }
+}
+
+impl From<&Vec<f32>> for BBox {
+    fn from(f: &Vec<f32>) -> Self {
+        BBox {
+            inner: [f[0], f[1], f[2], f[3]]
+        }
+    }
+}
+
+impl BBox {
+    fn inside(&self, p: Point) -> bool {
+        let b = self.inner;
+        p.x() > b[0] && p.y() > b[1] && p.x() < b[0] + b[2] && p.y() < b[1] + b[2]
+    }
+
+    fn left(&self) -> f32 {
+        self.inner[0]
+    }
+
+    fn top(&self) -> f32 {
+        self.inner[1]
+    }
+
+    fn right(&self) -> f32 {
+        self.inner[0] + self.inner[2]
+    }
+
+    fn bottom(&self) -> f32 {
+        self.inner[1] + self.inner[3]
+    }
+}
+
 type TripleSite = (Point, Point, Point);
 
 /// Computes the Voronoi diagram of a set of points.
 /// Returns a Doubly Connected Edge List.
-pub fn voronoi(points: Vec<Point>, boxsize: f32) -> DCEL {
+pub fn voronoi(points: Vec<Point>, boxsize: (f32, f32, f32, f32)) -> DCEL {
     trace!("Starting Voronoi Computation");
     let mut event_queue = EventQueue::new();
     let mut beachline = BeachLine::new();
@@ -32,7 +75,7 @@ pub fn voronoi(points: Vec<Point>, boxsize: f32) -> DCEL {
             }
         }
     }
-    add_bounding_box(boxsize, &beachline, &mut result);
+    add_bounding_box(boxsize.into(), &beachline, &mut result);
     add_faces(&mut result);
     return result;
 }
@@ -259,19 +302,14 @@ fn handle_circle_event(
     }
 }
 
-fn outside_bb(pt: Point, box_size: f32) -> bool {
-    let delta = 0.1;
-    pt.x() < 0. - delta || pt.x() > box_size + delta || pt.y() < 0. - delta || pt.y() > box_size + delta
-}
-
-fn add_bounding_box(boxsize: f32, beachline: &BeachLine, dcel: &mut DCEL) {
+fn add_bounding_box(bb: BBox, beachline: &BeachLine, dcel: &mut DCEL) {
     extend_edges(beachline, dcel);
 
     let delta = 50.;
-    let bb_top =    [Point::new(0. - delta, 0.),         Point::new(boxsize + delta, 0.)];
-    let bb_bottom = [Point::new(0. - delta, boxsize),    Point::new(boxsize + delta, boxsize)];
-    let bb_left =   [Point::new(0.,         0. - delta), Point::new(0.,              boxsize + delta)];
-    let bb_right =  [Point::new(boxsize,    0. - delta), Point::new(boxsize,         boxsize + delta)];
+    let bb_top =    [Point::new(bb.left() - delta, bb.top()),         Point::new(bb.right() + delta, bb.top())];
+    let bb_bottom = [Point::new(bb.left() - delta, bb.bottom()),      Point::new(bb.right() + delta, bb.bottom())];
+    let bb_left =   [Point::new(bb.left(),         bb.top() - delta), Point::new(bb.left(),          bb.bottom() + delta)];
+    let bb_right =  [Point::new(bb.right(),        bb.top() - delta), Point::new(bb.right(),         bb.bottom() + delta)];
 
     add_line(bb_top, dcel);
     add_line(bb_right, dcel);
@@ -282,11 +320,10 @@ fn add_bounding_box(boxsize: f32, beachline: &BeachLine, dcel: &mut DCEL) {
 
     for vert in 0..dcel.vertices.len() {
         let this_pt = dcel.vertices[vert].coordinates;
-        if outside_bb(this_pt, boxsize) {
+        if !bb.inside(this_pt) {
             dcel.remove_vertex(vert);
         }
     }
-
 }
 
 // This just extends the edges past the end of the bounding box
@@ -316,5 +353,4 @@ fn extend_edges(beachline: &BeachLine, dcel: &mut DCEL) {
             current_node = next_node;
         } else { break; }
     }
-
 }

@@ -1,5 +1,6 @@
 use point::Point;
 use voronoi::voronoi;
+use crate::BBox;
 use dcel::make_polygons;
 
 /// Computes the centroid of a polygon.
@@ -14,7 +15,7 @@ pub fn polygon_centroid(pts: &Vec<Point>) -> Point {
 /// Produces the Lloyd Relaxation of a set of points.
 ///
 /// Each point is moved to the centroid of its Voronoi cell.
-pub fn lloyd_relaxation(pts: Vec<Point>, box_size: f32) -> Vec<Point> {
+pub fn lloyd_relaxation(pts: Vec<Point>, box_size: BBox) -> Vec<Point> {
     let voronoi = voronoi(pts, box_size);
     let faces = make_polygons(&voronoi);
     faces.iter().map(polygon_centroid).collect::<Vec<Point>>()
