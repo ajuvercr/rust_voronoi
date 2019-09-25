@@ -318,12 +318,12 @@ fn add_bounding_box(bb: BBox, beachline: &BeachLine, dcel: &mut DCEL) {
 
     dcel.set_prev();
 
-    for vert in 0..dcel.vertices.len() {
-        let this_pt = dcel.vertices[vert].coordinates;
-        if !bb.inside(this_pt) {
-            dcel.remove_vertex(vert);
-        }
-    }
+    // for vert in 0..dcel.vertices.len() {
+    //     let this_pt = dcel.vertices[vert].coordinates;
+    //     if !bb.inside(this_pt) {
+    //         dcel.remove_vertex(vert);
+    //     }
+    // }
 }
 
 // This just extends the edges past the end of the bounding box
