@@ -76,7 +76,7 @@ pub fn voronoi(points: Vec<Point>, boxsize: (f32, f32, f32, f32)) -> DCEL {
             }
         }
     }
-    // add_bounding_box(boxsize.into(), &beachline, &mut result);
+    add_bounding_box(boxsize.into(), &beachline, &mut result);
     add_faces(&mut result);
     return result;
 }
@@ -306,7 +306,7 @@ fn handle_circle_event(
 fn add_bounding_box(bb: BBox, beachline: &BeachLine, dcel: &mut DCEL) {
     extend_edges(beachline, dcel);
 
-    let delta = 50.;
+    let delta = 0.;
     let bb_top =    [Point::new(bb.left() - delta, bb.top()),         Point::new(bb.right() + delta, bb.top())];
     let bb_bottom = [Point::new(bb.left() - delta, bb.bottom()),      Point::new(bb.right() + delta, bb.bottom())];
     let bb_left =   [Point::new(bb.left(),         bb.top() - delta), Point::new(bb.left(),          bb.bottom() + delta)];
